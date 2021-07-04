@@ -9,16 +9,16 @@ import { IResUser } from './interfaces/user-storage.interface';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>
+    private usersRepository: Repository<User>,
   ) {}
-  async create(createUserDto: CreateUserDto): Promise<IResUser|undefined> {
+  async create(createUserDto: CreateUserDto): Promise<IResUser | undefined> {
     const newUser = this.usersRepository.create(createUserDto);
     const savedUser = this.usersRepository.save(newUser);
     const savedId = (await savedUser).id;
     if (savedId) {
       const res = await this.usersRepository.findOne(savedId);
-      return User.toResponse(res)
-    };
+      return User.toResponse(res);
+    }
     return undefined;
   }
 
@@ -30,12 +30,15 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User|undefined> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User | undefined> {
     const res = await this.usersRepository.findOne(id);
     //console.log(res)
     if (res === undefined || id === undefined) return undefined;
     const updatedUser = await this.usersRepository.update(id, updateUserDto);
-    
+
     return updatedUser.raw;
     //return `This action updates a #${id} user`;
   }

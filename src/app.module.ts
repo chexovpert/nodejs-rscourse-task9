@@ -5,21 +5,27 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { BoardsModule } from './boards/boards.module';
+import { Board } from './boards/entities/board.entity';
 
 @Module({
-  imports: [UsersModule, ConfigModule.forRoot({
-    envFilePath: '.env'
-  }),
-  TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: process.env.POSTGRES_HOST,
-    port: +process.env.POSTGRES_PORT,
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    entities: [User],
-    synchronize: true,
-  })],
+  imports: [
+    UsersModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST,
+      port: +process.env.POSTGRES_PORT,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      database: process.env.POSTGRES_DB,
+      entities: [User, Board],
+      synchronize: true,
+    }),
+    BoardsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

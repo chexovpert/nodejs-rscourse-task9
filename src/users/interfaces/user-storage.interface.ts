@@ -1,7 +1,7 @@
 interface IResUser {
-    name: string;
-    login: string;
-    id: string | undefined;
-  }
+  name: string;
+  login: string;
+  id: string | undefined;
+}
 
-export {IResUser} 
+export { IResUser };
