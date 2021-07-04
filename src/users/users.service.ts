@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { IResUser } from './interfaces/user-storage.interface';
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>
+  ) {}
+  async create(createUserDto: CreateUserDto): Promise<IResUser|undefined> {
+    const newUser = this.usersRepository.create(createUserDto);
+    const savedUser = this.usersRepository.save(newUser);
+    const savedId = (await savedUser).id;
+    if (savedId) {
+      const res = await this.usersRepository.findOne(savedId);
+      return User.toResponse(res)
+    };
+    return undefined;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(): Promise<User[]> {
+    return this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string | undefined): Promise<User> {
+    return this.usersRepository.findOne(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User|undefined> {
+    const res = await this.usersRepository.findOne(id);
+    //console.log(res)
+    if (res === undefined || id === undefined) return undefined;
+    const updatedUser = await this.usersRepository.update(id, updateUserDto);
+    
+    return updatedUser.raw;
+    //return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<'deleted' | 'not found'> {
+    const res = this.usersRepository.findOne(id);
+    if (res === undefined || id === undefined) return 'not found';
+    const deletedUser = await this.usersRepository.delete(id);
+    if (deletedUser.affected) return 'deleted';
+    return 'not found';
+    //console.log( `This action removes a #${id} user`);
   }
 }
