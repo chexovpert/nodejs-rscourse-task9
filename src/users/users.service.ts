@@ -5,11 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { IResUser } from './interfaces/user-storage.interface';
+import { Task } from 'src/tasks/entities/task.entity';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Task)
+    private tasksRepository: Repository<Task>,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<IResUser | undefined> {
     const newUser = this.usersRepository.create(createUserDto);
@@ -46,8 +49,11 @@ export class UsersService {
   async remove(id: string): Promise<'deleted' | 'not found'> {
     const res = this.usersRepository.findOne(id);
     if (res === undefined || id === undefined) return 'not found';
+    //const taskRepo = getRepository(Task);
+    await this.tasksRepository.update({ userId: id }, { userId: null });
     const deletedUser = await this.usersRepository.delete(id);
     if (deletedUser.affected) return 'deleted';
+    console.log('not found')
     return 'not found';
     //console.log( `This action removes a #${id} user`);
   }

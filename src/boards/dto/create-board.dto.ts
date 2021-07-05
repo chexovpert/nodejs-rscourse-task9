@@ -1,5 +1,5 @@
 export class CreateBoardDto {
-    readonly id?: string;
-    readonly title: string;
-    readonly columns: string;
+  readonly id?: string;
+  readonly title: string;
+  readonly columns: string;
 }

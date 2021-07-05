@@ -8,10 +8,13 @@ import { UsersModule } from './users/users.module';
 import { BoardsModule } from './boards/boards.module';
 import { Board } from './boards/entities/board.entity';
 import { Task } from './tasks/entities/task.entity';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
     UsersModule,
+    BoardsModule,
+    TasksModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),
@@ -24,8 +27,8 @@ import { Task } from './tasks/entities/task.entity';
       database: process.env.POSTGRES_DB,
       entities: [User, Board, Task],
       synchronize: true,
-    }),
-    BoardsModule,
+    })
+    
   ],
   controllers: [AppController],
   providers: [AppService],

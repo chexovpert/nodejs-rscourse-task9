@@ -1,29 +1,26 @@
 //import { v4 as uuid } from 'uuid';
-import {Entity, Column, PrimaryGeneratedColumn, BaseEntity} from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 
-@Entity({name: 'Task'})
+@Entity({ name: 'Task' })
 export class Task extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string| undefined ;
+  @PrimaryGeneratedColumn('uuid')
+  id: string | undefined;
 
-    @Column('varchar')
-    title = 'base string';
+  @Column('varchar')
+  title = 'base string';
 
-    @Column('int')
-    order=0;
+  @Column('int')
+  order = 0;
 
-    @Column('varchar')
-    description = 'base description';
+  @Column('varchar')
+  description = 'base description';
 
-    @Column({type: 'text',
-    nullable: true,})
-    userId!: string | null;
+  @Column({ type: 'text', nullable: true })
+  userId!: string | null;
 
-    @Column('varchar', {nullable: true})
-    columnId: string | null = null;
+  @Column('varchar', { nullable: true })
+  columnId: string | null = null;
 
-    @Column( {type: 'text', nullable: true})
-    boardId: string | null = null ;
-
+  @Column({ type: 'text', nullable: true })
+  boardId: string | null = null;
 }
-

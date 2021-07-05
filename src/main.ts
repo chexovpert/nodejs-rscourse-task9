@@ -4,7 +4,10 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { SwaggerModule} from '@nestjs/swagger';
+import { join } from 'path';
 import { AppModule } from './app.module';
+import * as yaml from 'yamljs';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 4000;
@@ -17,6 +20,8 @@ async function bootstrap() {
       new FastifyAdapter(),
     );
   }
+  const swaggerDocument = yaml.load(join(__dirname, '..', 'doc', 'api.yaml'));
+  SwaggerModule.setup('doc', app, swaggerDocument);
   await app.listen(PORT, () => console.log(`app started on ${PORT}`));
 }
 bootstrap();
