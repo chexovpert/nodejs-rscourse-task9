@@ -3,13 +3,18 @@ import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
-@Controller('tasks')
+@Controller('boards/:boardId/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  create(@Param('boardId') boardId:string | undefined, @Body() createTaskDto: CreateTaskDto) {
+    return this.tasksService.create(boardId, createTaskDto);
+  }
+
+  @Get()
+  findAllByBoardID(@Param('boardId') boardId:string | undefined) {
+    return this.tasksService.findAllByBoardID(boardId);
   }
 
   @Get()
@@ -17,18 +22,18 @@ export class TasksController {
     return this.tasksService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
+  @Get(':taskId')
+  findOne(@Param('boardId') boardId: string | undefined, @Param('taskId') taskId: string | undefined) {
+    return this.tasksService.findOne(boardId, taskId);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+  @Put(':taskId')
+  update(@Param('boardId') boardId: string | undefined, @Param('taskId') taskId: string | undefined, @Body() updateTaskDto: UpdateTaskDto) {
+    return this.tasksService.update(boardId, taskId, updateTaskDto);
   }
 
-  @Delete(':id')
+  @Delete(':taskId')
   remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
+    return this.tasksService.remove(id);
   }
 }

@@ -7,7 +7,6 @@ import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { BoardsModule } from './boards/boards.module';
 import { Board } from './boards/entities/board.entity';
-import { TasksModule } from './tasks/tasks.module';
 import { Task } from './tasks/entities/task.entity';
 
 @Module({
@@ -27,7 +26,6 @@ import { Task } from './tasks/entities/task.entity';
       synchronize: true,
     }),
     BoardsModule,
-    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

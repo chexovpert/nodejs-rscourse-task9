@@ -23,7 +23,7 @@ export class Task extends BaseEntity {
     columnId: string | null = null;
 
     @Column( {type: 'text', nullable: true})
-    boardId!: string ;
+    boardId: string | null = null ;
 
 }
 
