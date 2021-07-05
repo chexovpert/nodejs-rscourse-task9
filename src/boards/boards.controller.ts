@@ -6,10 +6,12 @@ import {
   Param,
   Delete,
   Put,
+  Res,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { Response } from 'express';
 
 @Controller('boards')
 export class BoardsController {
@@ -26,8 +28,12 @@ export class BoardsController {
   }
 
   @Get(':boardId')
-  findOne(@Param('boardId') boardId: string) {
-    return this.boardsService.findOne(boardId);
+  async findOne(@Res() res: Response, @Param('boardId') boardId: string) {
+    const board = await this.boardsService.findOne(boardId);
+    if(board !== undefined){
+      res.status(200).send(board)}
+     else {
+      res.status(404).send('not found')};
   }
 
   @Put(':boardId')

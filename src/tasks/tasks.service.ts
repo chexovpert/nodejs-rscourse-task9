@@ -31,12 +31,12 @@ export class TasksService {
     return this.taskRepository.find({ where: { boardId: `${boardId}` } });
   }
 
-  findOne(
+  async findOne(
     boardId: string | undefined,
     taskId: string | undefined,
   ): Promise<Task | undefined> {
     if (boardId === undefined || taskId === undefined) return undefined;
-    return this.taskRepository.findOne({
+    return await this.taskRepository.findOne({
       where: { boardId: boardId, id: taskId },
     });
   }
@@ -61,24 +61,17 @@ export class TasksService {
   async remove(
     boardId: string | undefined ,
     taskId: string | undefined,
-  ): Promise<'deleted' | 'not found'> {
-    const res = await this.taskRepository.findOne(
-      { boardId: boardId, id: taskId },
-    );
+  ): Promise<boolean> {
+    const res = await this.taskRepository.findOne({boardId: boardId, id: taskId})
     console.log(res);
-    if (res === undefined || taskId === undefined || boardId === undefined)
-     { 
-      console.log('not found')
-       return 'not found';
-      }
+    
+    //if (taskId === undefined || boardId === undefined) return false
     const deletedTask = await this.taskRepository.delete({
       boardId: `${boardId}`,
       id: `${taskId}`,
-    });
-    if (deletedTask.affected) {
-      //console.log('deleted');
-      return 'deleted'};
-    console.log('not found')
-    return 'not found';
+    })
+    //console.log(!!deletedTask.affected);
+    
+    return !!deletedTask.affected;
   }
 }

@@ -12,6 +12,7 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Response } from 'express';
 
 @Controller('boards/:boardId/tasks')
 export class TasksController {
@@ -36,11 +37,16 @@ export class TasksController {
   }
 
   @Get(':taskId')
-  findOne(
+  async findOne(
+    @Res() res: Response,
     @Param('boardId') boardId: string | undefined,
     @Param('taskId') taskId: string | undefined,
   ) {
-    return this.tasksService.findOne(boardId, taskId);
+    const task = await this.tasksService.findOne(boardId, taskId);
+    if(task !== undefined){
+      res.status(200).send(task)}
+     else {
+      res.status(404).send('not found')};
   }
 
   @Put(':taskId')
@@ -53,12 +59,15 @@ export class TasksController {
   }
 
   @Delete(':taskId')
-  remove(
-    //@Res({ passthrough: true }) res: Response,
+  async remove(
+    @Res() res: Response,
     @Param('boardId') boardId: string | undefined,
     @Param('taskId') taskId: string | undefined,
   ) {
-    return this.tasksService.remove(boardId, taskId);
-    //res.status;
+    const bool = this.tasksService.remove(boardId, taskId);
+    if(bool){
+    res.status(204).send('succesfuly deleted')}
+   else {
+    res.status(404).send('not found')};
   }
 }

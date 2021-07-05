@@ -42,18 +42,18 @@ export class BoardsService {
     //return `This action updates a #${id} board`;
   }
 
-  async remove(boardId: string): Promise<void> {
-    //const res = this.boardRepository.findOne(boardId);
-    //if (res === undefined || boardId === undefined) return 'Not Found';
+  async remove(boardId: string): Promise<boolean> {
+    const res = this.boardRepository.findOne(boardId);
+    if (res === undefined || boardId === undefined) return false;
 
-    // const deletedTask = await this.taskRepository.find({ where: { boardId: boardId } });
-    // Promise.all(
-    //   deletedTask.map(async (task: Task) => {
-    //     //console.log(task);
-    //     await this.taskRepository.delete({ id: task.id });
-    //   })
-    // );
-    await this.boardRepository.delete(boardId);
-    //return !!deletedBoard.affected
+    const deletedTask = await this.taskRepository.find({ where: { boardId: boardId } });
+    Promise.all(
+      deletedTask.map(async (task: Task) => {
+        //console.log(task);
+        await this.taskRepository.delete({ id: task.id });
+      })
+    );
+    const deletedBoard = await this.boardRepository.delete(boardId);
+    return !!deletedBoard.affected
   }
 }
