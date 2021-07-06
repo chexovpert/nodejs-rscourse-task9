@@ -9,6 +9,7 @@ import { BoardsModule } from './boards/boards.module';
 import { Board } from './boards/entities/board.entity';
 import { Task } from './tasks/entities/task.entity';
 import { TasksModule } from './tasks/tasks.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { TasksModule } from './tasks/tasks.module';
       database: process.env.POSTGRES_DB,
       entities: [User, Board, Task],
       synchronize: true,
-    })
+    }),
+    AuthModule
     
   ],
   controllers: [AppController],
