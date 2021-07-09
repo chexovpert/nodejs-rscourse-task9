@@ -5,15 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { IResUser } from './interfaces/user-storage.interface';
-import { Task } from 'src/tasks/entities/task.entity';
+//import { Task } from 'src/tasks/entities/task.entity';
 import * as bcrypt from 'bcryptjs';
+import { TasksService } from 'src/tasks/tasks.service';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @InjectRepository(Task)
-    private tasksRepository: Repository<Task>,
+    private tasksService: TasksService,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<IResUser | undefined> {
     const { password } = createUserDto;
@@ -71,7 +71,7 @@ export class UsersService {
     const res = this.usersRepository.findOne(id);
     if (res === undefined || id === undefined) return false;
     //const taskRepo = getRepository(Task);
-    await this.tasksRepository.update({ userId: id }, { userId: null });
+    await this.tasksService.removeUserId(id);
     const deletedUser = await this.usersRepository.delete(id);
     if (deletedUser.affected) return true;
     //console.log('not found');

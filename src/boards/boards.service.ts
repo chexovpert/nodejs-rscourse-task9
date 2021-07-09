@@ -5,14 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Board } from './entities/board.entity';
 import { Task } from 'src/tasks/entities/task.entity';
+import { TasksService } from 'src/tasks/tasks.service';
 
 @Injectable()
 export class BoardsService {
   constructor(
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
-    @InjectRepository(Task)
-    private taskRepository: Repository<Task>,
+    private taskService: TasksService,
   ) {}
   async create(createBoardDto: CreateBoardDto): Promise<Board | undefined> {
     const newBoard = this.boardRepository.create(createBoardDto);
@@ -49,13 +49,11 @@ export class BoardsService {
     const res = this.boardRepository.findOne(boardId);
     if (res === undefined || boardId === undefined) return false;
 
-    const deletedTask = await this.taskRepository.find({
-      where: { boardId: boardId },
-    });
+    const deletedTask = await this.taskService.findAllByBoardID(boardId);
     Promise.all(
       deletedTask.map(async (task: Task) => {
         //console.log(task);
-        await this.taskRepository.delete({ id: task.id });
+        await this.taskService.removeFromBoard(task.id);
       }),
     );
     const deletedBoard = await this.boardRepository.delete(boardId);

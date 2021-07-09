@@ -77,4 +77,10 @@ export class TasksService {
 
     return !!deletedTask.affected;
   }
+  async removeFromBoard(taskId: string | undefined): Promise<void> {
+    await this.taskRepository.delete({ id: taskId });
+  }
+  async removeUserId(id: string | undefined): Promise<void> {
+    await this.taskRepository.update({ userId: id }, { userId: null });
+  }
 }
