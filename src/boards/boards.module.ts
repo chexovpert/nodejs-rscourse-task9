@@ -8,7 +8,11 @@ import { Task } from 'src/tasks/entities/task.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board]), TypeOrmModule.forFeature([Task]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Board]),
+    TypeOrmModule.forFeature([Task]),
+    AuthModule,
+  ],
   controllers: [BoardsController],
   providers: [BoardsService],
 })

@@ -37,7 +37,10 @@ export class BoardsService {
   ): Promise<Board | undefined> {
     const res = await this.boardRepository.findOne(boardId);
     if (res === undefined || boardId === undefined) return undefined;
-    const updatedBoard = await this.boardRepository.update(boardId, updateBoardDto);
+    const updatedBoard = await this.boardRepository.update(
+      boardId,
+      updateBoardDto,
+    );
     return updatedBoard.raw;
     //return `This action updates a #${id} board`;
   }
@@ -46,14 +49,16 @@ export class BoardsService {
     const res = this.boardRepository.findOne(boardId);
     if (res === undefined || boardId === undefined) return false;
 
-    const deletedTask = await this.taskRepository.find({ where: { boardId: boardId } });
+    const deletedTask = await this.taskRepository.find({
+      where: { boardId: boardId },
+    });
     Promise.all(
       deletedTask.map(async (task: Task) => {
         //console.log(task);
         await this.taskRepository.delete({ id: task.id });
-      })
+      }),
     );
     const deletedBoard = await this.boardRepository.delete(boardId);
-    return !!deletedBoard.affected
+    return !!deletedBoard.affected;
   }
 }

@@ -59,19 +59,22 @@ export class TasksService {
   }
 
   async remove(
-    boardId: string | undefined ,
+    boardId: string | undefined,
     taskId: string | undefined,
   ): Promise<boolean> {
-    const res = await this.taskRepository.findOne({boardId: boardId, id: taskId})
+    const res = await this.taskRepository.findOne({
+      boardId: boardId,
+      id: taskId,
+    });
     console.log(res);
-    
+
     //if (taskId === undefined || boardId === undefined) return false
     const deletedTask = await this.taskRepository.delete({
       boardId: `${boardId}`,
       id: `${taskId}`,
-    })
+    });
     //console.log(!!deletedTask.affected);
-    
+
     return !!deletedTask.affected;
   }
 }

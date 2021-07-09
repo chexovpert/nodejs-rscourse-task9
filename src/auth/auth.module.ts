@@ -5,13 +5,15 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [forwardRef(() =>UsersModule), JwtModule.register({
-    secret: process.env.JWT_SECRET_KEY || 'secret-key',
-    //signOptions: {expiresIn: '24h'}
-  })],
+  imports: [
+    forwardRef(() => UsersModule),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY || 'secret-key',
+      //signOptions: {expiresIn: '24h'}
+    }),
+  ],
   providers: [AuthService],
   controllers: [AuthController],
-  exports: [AuthModule, JwtModule]
-
+  exports: [AuthModule, JwtModule],
 })
 export class AuthModule {}

@@ -9,20 +9,23 @@ import {
   Res,
   HttpStatus,
   UseGuards,
+  HttpException,
+  UseFilters,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Response } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { HttpExceptionFilter } from 'src/helpers/http-exception.filter';
 
 @UseGuards(JwtAuthGuard)
+@UseFilters(new HttpExceptionFilter())
 @Controller('boards/:boardId/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(
+  async create(
     @Param('boardId') boardId: string | undefined,
     @Body() createTaskDto: CreateTaskDto,
   ) {
@@ -41,36 +44,57 @@ export class TasksController {
 
   @Get(':taskId')
   async findOne(
-    @Res() res: Response,
     @Param('boardId') boardId: string | undefined,
     @Param('taskId') taskId: string | undefined,
   ) {
-    const task = await this.tasksService.findOne(boardId, taskId);
-    if(task !== undefined){
-      res.status(200).send(task)}
-     else {
-      res.status(404).send('not found')};
+    try {
+      const task = await this.tasksService.findOne(boardId, taskId);
+      if (task !== undefined) {
+        return task;
+      } else {
+        throw 'not found';
+      }
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Put(':taskId')
-  update(
+  async update(
     @Param('boardId') boardId: string | undefined,
     @Param('taskId') taskId: string | undefined,
     @Body() updateTaskDto: UpdateTaskDto,
   ) {
-    return this.tasksService.update(boardId, taskId, updateTaskDto);
+    try {
+      const task = await this.tasksService.update(
+        boardId,
+        taskId,
+        updateTaskDto,
+      );
+      if (task === undefined) {
+        throw 'not found';
+      } else {
+        return task;
+      }
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Delete(':taskId')
   async remove(
-    @Res() res: Response,
     @Param('boardId') boardId: string | undefined,
     @Param('taskId') taskId: string | undefined,
   ) {
-    const bool = this.tasksService.remove(boardId, taskId);
-    if(bool){
-    res.status(204).send('succesfuly deleted')}
-   else {
-    res.status(404).send('not found')};
+    try {
+      const bool = await this.tasksService.remove(boardId, taskId);
+      if (bool) {
+        return bool;
+      } else {
+        throw 'not found';
+      }
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.NOT_FOUND);
+    }
   }
 }

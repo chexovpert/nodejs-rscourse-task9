@@ -20,8 +20,7 @@ import typeormconfig from './common/ormconfig';
       envFilePath: '.env',
     }),
     TypeOrmModule.forRoot(typeormconfig),
-    AuthModule
-    
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
