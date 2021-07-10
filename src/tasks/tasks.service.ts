@@ -66,7 +66,7 @@ export class TasksService {
       boardId: boardId,
       id: taskId,
     });
-    console.log(res);
+    //console.log(res);
 
     //if (taskId === undefined || boardId === undefined) return false
     const deletedTask = await this.taskRepository.delete({

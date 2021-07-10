@@ -17,7 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { HttpExceptionFilter } from 'src/helpers/http-exception.filter';
 @UseGuards(JwtAuthGuard)
-@UseFilters(new HttpExceptionFilter())
+@UseFilters(HttpExceptionFilter)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

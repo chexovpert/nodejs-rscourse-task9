@@ -14,11 +14,11 @@ export class AuthService {
   async login(createUserDto: CreateUserDto) {
     const { login, password } = createUserDto;
     const validatedUser = await this.validateUser(login, password);
-    console.log(validatedUser);
+    //console.log(validatedUser);
 
     if (validatedUser) {
       const token = this.generateToken(validatedUser);
-      console.log(token);
+      //console.log(token);
       return token;
     } else {
       return undefined;
@@ -27,14 +27,14 @@ export class AuthService {
   private async generateToken(user: User) {
     const { id, login } = user;
     const payload = { id, login };
-    console.log(payload);
+    //console.log(payload);
     //console.log(process.env.JWT_SECRET_KEY);
 
     return { token: this.jwtService.sign(payload) };
   }
   private async validateUser(login: string, password: string) {
     const user = await this.userService.findOneByLogin(login);
-    console.log(user);
+    //console.log(user);
     if (user) {
       const { password: hashedPassword } = user;
       const comparisonRes = await bcrypt.compare(password, hashedPassword);

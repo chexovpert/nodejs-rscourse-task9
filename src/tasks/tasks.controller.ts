@@ -19,7 +19,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { HttpExceptionFilter } from 'src/helpers/http-exception.filter';
 
 @UseGuards(JwtAuthGuard)
-@UseFilters(new HttpExceptionFilter())
+@UseFilters(HttpExceptionFilter)
 @Controller('boards/:boardId/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
@@ -37,10 +37,10 @@ export class TasksController {
     return this.tasksService.findAllByBoardID(boardId);
   }
 
-  @Get()
-  findAll() {
-    return this.tasksService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.tasksService.findAll();
+  // }
 
   @Get(':taskId')
   async findOne(

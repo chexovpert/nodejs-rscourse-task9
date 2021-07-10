@@ -18,10 +18,10 @@ export class JwtAuthGuard implements CanActivate {
       if (type !== 'Bearer') {
         throw new UnauthorizedException({ message: 'not authorized' });
       }
-      console.log(type, token);
+      //console.log(type, token);
 
       const user = this.jwtService.verify(token);
-      console.log(user);
+      //console.log(user);
       //req.user = user
       return true;
     } catch (e) {

@@ -14,14 +14,21 @@ async function bootstrap() {
   let app: INestApplication | NestFastifyApplication | null = null;
   if (process.env.USE_FASTIFY === 'false') {
     app = await NestFactory.create(AppModule);
+
+    const swaggerDocument = yaml.load(join(__dirname, '..', 'doc', 'api.yaml'));
+    SwaggerModule.setup('doc', app, swaggerDocument);
+    await app.listen(PORT, () => console.log(`Express application is running on ${PORT}`));
   } else {
     app = await NestFactory.create<NestFastifyApplication>(
       AppModule,
       new FastifyAdapter(),
     );
+    const swaggerDocument = yaml.load(join(__dirname, '..', 'doc', 'api.yaml'));
+    SwaggerModule.setup('doc', app, swaggerDocument);
+    await app.listen(PORT, '0.0.0.0');
+    console.log(`Fastify application is running on: ${await app.getUrl()}`);
   }
-  const swaggerDocument = yaml.load(join(__dirname, '..', 'doc', 'api.yaml'));
-  SwaggerModule.setup('doc', app, swaggerDocument);
-  await app.listen(PORT, () => console.log(`app started on ${PORT}`));
+  
+  
 }
 bootstrap();
