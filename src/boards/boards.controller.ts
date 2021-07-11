@@ -33,14 +33,6 @@ export class BoardsController {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  @Post('smth')
-  async createErr(@Body() createBoardDto: CreateBoardDto) {
-    try {
-      throw 'myException';
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.NOT_FOUND);
-    }
-  }
   @Get()
   findAll() {
     return this.boardsService.findAll();

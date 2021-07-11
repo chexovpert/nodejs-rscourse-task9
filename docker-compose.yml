@@ -12,6 +12,7 @@ services:
         environment: 
             - PORT=${PORT}
         volumes: 
+            - ./dist:/app/dist/
             - ./logs:/app/logs
             - ./src:/app/src
             - .:/app

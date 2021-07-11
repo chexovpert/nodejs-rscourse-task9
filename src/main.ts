@@ -17,7 +17,9 @@ async function bootstrap() {
 
     const swaggerDocument = yaml.load(join(__dirname, '..', 'doc', 'api.yaml'));
     SwaggerModule.setup('doc', app, swaggerDocument);
-    await app.listen(PORT, () => console.log(`Express application is running on ${PORT}`));
+    await app.listen(PORT, () =>
+      console.log(`Express application is running on ${PORT}`),
+    );
   } else {
     app = await NestFactory.create<NestFastifyApplication>(
       AppModule,
@@ -28,7 +30,5 @@ async function bootstrap() {
     await app.listen(PORT, '0.0.0.0');
     console.log(`Fastify application is running on: ${await app.getUrl()}`);
   }
-  
-  
 }
 bootstrap();

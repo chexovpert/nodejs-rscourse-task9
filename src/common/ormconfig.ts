@@ -8,7 +8,7 @@ import {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USER,
-} from './config'
+} from './config';
 //import dotenv from 'dotenv';
 //import { ConfigService } from '@nestjs/config';
 //const configService = new ConfigService()
@@ -33,4 +33,4 @@ const typeormconfig: ConnectionOptions = {
   },
 };
 
-export {typeormconfig};
+export { typeormconfig };

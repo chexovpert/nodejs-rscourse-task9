@@ -19,8 +19,6 @@ const { POSTGRES_DB } = process.env;
 
 const { MONGO_CONNECTION_STRING } = process.env;
 
-
-
 //const { SECRET_KEY } = process.env;
 
 export {
@@ -35,5 +33,5 @@ export {
   POSTGRES_PORT,
   POSTGRES_USER,
   //SECRET_KEY,
-  USE_FASTIFY
+  USE_FASTIFY,
 };

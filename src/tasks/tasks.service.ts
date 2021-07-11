@@ -62,10 +62,10 @@ export class TasksService {
     boardId: string | undefined,
     taskId: string | undefined,
   ): Promise<boolean> {
-    const res = await this.taskRepository.findOne({
-      boardId: boardId,
-      id: taskId,
-    });
+    // const res = await this.taskRepository.findOne({
+    //   boardId: boardId,
+    //   id: taskId,
+    // });
     //console.log(res);
 
     //if (taskId === undefined || boardId === undefined) return false
