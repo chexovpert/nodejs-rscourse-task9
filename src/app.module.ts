@@ -9,7 +9,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { AuthModule } from './auth/auth.module';
 import { typeormconfig } from './common/ormconfig';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggerMiddleware } from './helpers/logging.interceptor';
+import { LoggerMiddleware } from './helpers/logging.middleware';
 import { LoggingInterceptor } from './helpers/logger.interceptor2';
 //import { LoggingInterceptor } from './helpers/logging.interceptor';
 @Module({

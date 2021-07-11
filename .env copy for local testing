@@ -1,6 +1,7 @@
 NODE_ENV=development
 PORT=4000
 AUTH_MODE=false
+USE_FASTIFY=true
 JWT_SECRET_KEY=secret-key
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5433
