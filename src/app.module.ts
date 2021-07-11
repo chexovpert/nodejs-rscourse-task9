@@ -1,35 +1,40 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { BoardsModule } from './boards/boards.module';
-import { Board } from './boards/entities/board.entity';
 import { TasksModule } from './tasks/tasks.module';
-import { Task } from './tasks/entities/task.entity';
-
+import { AuthModule } from './auth/auth.module';
+import { typeormconfig } from './common/ormconfig';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerMiddleware } from './helpers/logging.middleware';
+import { LoggingInterceptor } from './helpers/logger.interceptor2';
+//import { LoggingInterceptor } from './helpers/logging.interceptor';
 @Module({
   imports: [
     UsersModule,
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-    }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: +process.env.POSTGRES_PORT,
-      username: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB,
-      entities: [User, Board, Task],
-      synchronize: true,
-    }),
     BoardsModule,
     TasksModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      //isGlobal: true
+    }),
+    TypeOrmModule.forRoot(typeormconfig),
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  // configure(consumer: MiddlewareConsumer): void {
+  //   consumer.apply(LoggerMiddleware).forRoutes('*');
+  // }
+}

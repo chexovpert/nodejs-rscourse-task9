@@ -4,10 +4,10 @@ USE_FASTIFY=true
 AUTH_MODE=false
 JWT_SECRET_KEY=secret-key
 DEFAULT_SALT_ROUNDS=10
-POSTGRES_HOST=host.docker.internal
-POSTGRES_PORT=5432
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5433
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=postgres
+POSTGRES_PASSWORD=123456789
+POSTGRES_DB=test
 # Set your database connection information here
 MONGO_CONNECTION_STRING=your-mongo-db-connection-string

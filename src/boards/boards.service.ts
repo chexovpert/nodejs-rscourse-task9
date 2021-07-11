@@ -4,18 +4,21 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Board } from './entities/board.entity';
+import { Task } from 'src/tasks/entities/task.entity';
+import { TasksService } from 'src/tasks/tasks.service';
 
 @Injectable()
 export class BoardsService {
   constructor(
     @InjectRepository(Board)
-    private boardRepository: Repository<Board>
+    private boardRepository: Repository<Board>,
+    private taskService: TasksService,
   ) {}
-  async create(createBoardDto: CreateBoardDto): Promise<Board| undefined> {
+  async create(createBoardDto: CreateBoardDto): Promise<Board | undefined> {
     const newBoard = this.boardRepository.create(createBoardDto);
     const savedBoard = await this.boardRepository.save(newBoard);
     const savedId = savedBoard.id;
-    if (savedId) return this.boardRepository.findOne(savedId)
+    if (savedId) return this.boardRepository.findOne(savedId);
     return undefined;
   }
 
@@ -23,25 +26,37 @@ export class BoardsService {
     return this.boardRepository.find();
   }
 
-  findOne(id: string | undefined) : Promise<Board> {
-    return this.boardRepository.findOne(id)
+  findOne(boardId: string | undefined): Promise<Board> {
+    return this.boardRepository.findOne(boardId);
     //return `This action returns a #${id} board`;
   }
 
-  async update(id: string | undefined, updateBoardDto: UpdateBoardDto): Promise<Board | undefined> {
-    const res = await this.boardRepository.findOne(id);
-    if (res === undefined || id === undefined) return undefined;
-    const updatedBoard = await this.boardRepository.update(id, updateBoardDto);
+  async update(
+    boardId: string | undefined,
+    updateBoardDto: UpdateBoardDto,
+  ): Promise<Board | undefined> {
+    const res = await this.boardRepository.findOne(boardId);
+    if (res === undefined || boardId === undefined) return undefined;
+    const updatedBoard = await this.boardRepository.update(
+      boardId,
+      updateBoardDto,
+    );
     return updatedBoard.raw;
     //return `This action updates a #${id} board`;
   }
 
-  async remove(id: string | undefined): Promise<'deleted'| 'not found'> {
-    const res = await this.boardRepository.findOne(id);
-    if (res === undefined || id === undefined) return 'not found';
-    const deletedBoard = await this.boardRepository.delete(id);
-    if (deletedBoard.affected) return 'deleted';
-    return 'not found';
-    //return `This action removes a #${id} board`;
+  async remove(boardId: string): Promise<boolean> {
+    const res = this.boardRepository.findOne(boardId);
+    if (res === undefined || boardId === undefined) return false;
+
+    const deletedTask = await this.taskService.findAllByBoardID(boardId);
+    Promise.all(
+      deletedTask.map(async (task: Task) => {
+        //console.log(task);
+        await this.taskService.removeFromBoard(task.id);
+      }),
+    );
+    const deletedBoard = await this.boardRepository.delete(boardId);
+    return !!deletedBoard.affected;
   }
 }
